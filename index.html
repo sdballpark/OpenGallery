@@ -568,7 +568,7 @@ function updateKeyStatus(){
 function saveSetting(k,v){state.settings[k]=v;save(SK.SETTINGS,state.settings);}
 
 function loadSettingsUI(){
-  if(state.settings.gh_token){g('key-ghtoken').value=state.settings.gh_token;g('key-ghtoken').type='password';}
+  if(state.settings&&state.settings.gh_token){g('key-ghtoken').value=state.settings.gh_token;g('key-ghtoken').type='password';}
   var k=getKeys();
   if(k.google){g('key-google').value=k.google;g('key-google').type='password';}
   if(k.anthropic){g('key-anthropic').value=k.anthropic;g('key-anthropic').type='password';}
