@@ -428,12 +428,7 @@ html,body{height:100%;background:var(--off);color:var(--ink);font-family:var(--f
 <script>
 console.log("OG_V5");
 var GITHUB_TOKEN='';
-var GITHUB_REPO='sdballpark/opengallery-prompts';
 var SK={KEYS:'og_keys',PROMPTS:'og_prompts',CURATED:'og_curated',HISTORY:'og_history',SETTINGS:'og_settings'};
-var GH_TOKEN=state.settings.gh_token||'';
-var GH_REPO='sdballpark/opengallery-prompts';
-var GH_TOKEN='';
-var GH_REPO='sdballpark/opengallery-prompts';
 var g=function(id){return document.getElementById(id);};
 function escHtml(s){
   var r=String(s);
@@ -451,6 +446,7 @@ function toast(msg,type,dur){
   setTimeout(function(){e.className='';},dur||2400);
 }
 
+var GH_REPO='sdballpark/opengallery-prompts';
 var state={img64:null,imgMime:null,models:[],generating:false,lastSelected:null,settings:load('og_settings',{registry_url:''})};
 
 var MODELS=[
