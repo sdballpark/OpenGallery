@@ -203,12 +203,59 @@ html,body{height:100%;background:var(--off);color:var(--ink);font-family:var(--f
 .tip-box{position:absolute;left:20px;top:50%;transform:translateY(-50%);width:220px;background:var(--ink);color:var(--white);font-size:11px;line-height:1.5;padding:8px 10px;border-radius:var(--radius);z-index:500;pointer-events:none;opacity:0;transition:opacity var(--trans);font-weight:400;font-family:var(--font-u)}
 .tip-wrap:hover .tip-box{opacity:1}
 .tip-box::before{content:"";position:absolute;right:100%;top:50%;transform:translateY(-50%);border:5px solid transparent;border-right-color:var(--ink)}
+.tip-down .tip-box{left:0;top:calc(100% + 6px);transform:none}
+.tip-down .tip-box::before{right:auto;left:8px;top:auto;bottom:100%;transform:none;border:5px solid transparent;border-bottom-color:var(--ink);border-right-color:transparent}
+
+/* ── Mobile Responsive ── */
+@media (max-width:768px){
+  #panel-left{display:none;position:fixed;top:0;left:0;bottom:0;width:80%;max-width:320px;z-index:200;transform:translateX(-100%);transition:transform .25s ease;box-shadow:4px 0 20px rgba(0,0,0,0.2)}
+  #panel-left.drawer-open{display:flex;transform:translateX(0)}
+  #panel-right{display:none}
+  #panel-center{width:100%}
+  .app-name span{display:none}
+  .app-name{font-size:20px}
+  .hbtn{padding:6px 10px;font-size:11px}
+  .hbtn.gold{display:none}
+  #header{padding:0 12px;gap:8px}
+  #canvas-area{padding:12px;gap:12px}
+  #drop-zone{min-height:200px}
+  .par{flex-wrap:wrap}
+  #gen-btn{min-width:100%}
+  .clr-btn{flex:1}
+  #status-bar{gap:10px;padding:0 10px}
+  .si:last-child{display:none}
+  .modal{width:95vw;max-height:92vh}
+  .hgrid{grid-template-columns:repeat(2,1fr)}
+  #results-area.comparison{flex-direction:column}
+  .drawer-overlay{display:block}
+}
+@media (max-width:480px){
+  .app-name{font-size:17px}
+  .hbtn{padding:5px 8px;font-size:10px;letter-spacing:0.02em}
+  #drop-zone{min-height:160px}
+  .dh-title{font-size:13px}
+  .hgrid{grid-template-columns:1fr 1fr}
+}
+.drawer-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:199}
+.drawer-overlay.active{display:block}
+.mobile-menu-btn{display:none;background:none;border:1.5px solid var(--border);border-radius:3px;padding:6px 10px;color:var(--ink2);font-size:16px;cursor:pointer;line-height:1}
+@media (max-width:768px){.mobile-menu-btn{display:flex;align-items:center;justify-content:center}}
+.mobile-model-bar{display:none}
+@media (max-width:768px){
+  .mobile-model-bar{display:flex;gap:6px;overflow-x:auto;padding:8px 12px;background:var(--white);border-bottom:1px solid var(--border);flex-shrink:0}
+  .mobile-model-bar::-webkit-scrollbar{height:0}
+  .mmcard{flex-shrink:0;padding:6px 12px;border-radius:20px;border:1.5px solid var(--border);font-size:11px;font-weight:600;color:var(--ink3);background:var(--off);cursor:pointer;white-space:nowrap;transition:all var(--trans)}
+  .mmcard.sel{background:var(--ink);color:var(--white);border-color:var(--ink)}
+  .mmcard.nokey{opacity:0.4;cursor:not-allowed}
+}
 </style>
 </head>
 <body>
 <div id="app">
 
+<div class="drawer-overlay" id="drawer-overlay" onclick="closeDrawer()"></div>
 <header id="header">
+  <button class="mobile-menu-btn" onclick="toggleDrawer()" title="Open prompt library">&#9776;</button>
   <div class="app-name">Open Gallery<span>Universal AI Image Studio</span></div>
   <div style="display:flex;gap:8px">
     <button class="hbtn" onclick="openHistory()">History</button>
@@ -217,12 +264,13 @@ html,body{height:100%;background:var(--off);color:var(--ink);font-family:var(--f
   </div>
 </header>
 
+<div class="mobile-model-bar" id="mobile-model-bar"></div>
 <div id="main">
 
   <div id="panel-left">
     <div class="ph">
       <div class="pt">Prompt Library
-        <span class="tip-wrap"><i class="tip-icon">i</i><span class="tip-box">Click any prompt to load it into the text box. Gold star = curator pick. Blue = your personal prompt. Badges show the recommended model.</span></span>
+        <span class="tip-wrap tip-down"><i class="tip-icon">i</i><span class="tip-box">Click any prompt to load it into the text box. Gold star = curator pick. Blue = your personal prompt. Badges show the recommended model.</span></span>
       </div>
     </div>
     <div class="pb">
@@ -317,7 +365,7 @@ html,body{height:100%;background:var(--off);color:var(--ink);font-family:var(--f
     <div class="mbdy">
       <div class="ss">
         <div class="sst">API Keys
-          <span class="tip-wrap"><i class="tip-icon">i</i><span class="tip-box">Keys are stored in your browser only. Never shared with anyone. Each visitor enters their own keys.</span></span>
+          <span class="tip-wrap tip-down"><i class="tip-icon">i</i><span class="tip-box">Keys are stored in your browser only. Never shared with anyone. Each visitor enters their own keys.</span></span>
         </div>
         <div class="note">Keys stored locally in your browser only. Never sent anywhere except directly to the model API you select.</div>
         <div class="akrow">
@@ -357,7 +405,7 @@ html,body{height:100%;background:var(--off);color:var(--ink);font-family:var(--f
       </div>
       <div class="ss">
         <div class="sst">Prompt Registry URL
-          <span class="tip-wrap"><i class="tip-icon">i</i><span class="tip-box">Paste a GitHub raw URL to load a curated prompt library that auto-updates on every visit. Leave blank to use the built-in library.</span></span>
+          <span class="tip-wrap tip-down"><i class="tip-icon">i</i><span class="tip-box">Paste a GitHub raw URL to load a curated prompt library that auto-updates on every visit. Leave blank to use the built-in library.</span></span>
         </div>
         <div class="note">GitHub raw URL for curated prompts JSON. Leave blank to use built-in library.</div>
         <input class="sinp" type="text" id="reg-url" placeholder="https://raw.githubusercontent.com/..." oninput="saveSetting('registry_url',this.value)">
@@ -607,6 +655,7 @@ function updateKeyStatus() {
     status.textContent = 'No API keys - open Settings';
   }
   renderModels();
+  renderMobileModels();
 }
 
 function saveSetting(k, v) {
@@ -806,6 +855,7 @@ function toggleCat(id) {
 
 function applyPrompt(text, pid) {
   g('prompt-input').value = text;
+  closeDrawer();
   if (state.lastSelected) {
     var prev = g('pitem-' + state.lastSelected);
     if (prev) prev.classList.remove('selected');
@@ -1245,6 +1295,44 @@ document.addEventListener('keydown', function(e) {
   if ((e.ctrlKey || e.metaKey) && e.key === 'Enter' && !state.generating) generate();
 });
 
+function toggleDrawer() {
+  var panel = g('panel-left');
+  var overlay = g('drawer-overlay');
+  if (panel.classList.contains('drawer-open')) {
+    panel.classList.remove('drawer-open');
+    overlay.classList.remove('active');
+  } else {
+    panel.classList.add('drawer-open');
+    overlay.classList.add('active');
+  }
+}
+
+function closeDrawer() {
+  var panel = g('panel-left');
+  var overlay = g('drawer-overlay');
+  panel.classList.remove('drawer-open');
+  overlay.classList.remove('active');
+}
+
+function renderMobileModels() {
+  var bar = g('mobile-model-bar');
+  if (!bar) return;
+  var keys = getKeys();
+  bar.innerHTML = '';
+  MODELS.forEach(function(m) {
+    var hasKey = !!keys[m.api];
+    var selIdx = state.models.indexOf(m.id);
+    var btn = document.createElement('button');
+    btn.className = 'mmcard' + (selIdx >= 0 ? ' sel' : '') + (!hasKey ? ' nokey' : '');
+    btn.textContent = m.name;
+    btn.onclick = function() {
+      if (!hasKey) openSettings();
+      else { selectModel(m.id); renderMobileModels(); }
+    };
+    bar.appendChild(btn);
+  });
+}
+
 function init() {
   loadRegistry();
   updateKeyStatus();
@@ -1255,6 +1343,7 @@ function init() {
     var m = MODELS[i];
     if (keys[m.api]) { state.models = [m.id]; renderModels(); break; }
   }
+  renderMobileModels();
 }
 
 init();
